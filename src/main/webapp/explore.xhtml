@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/header.xhtml">
+
+            <ui:define name="content">
+                <script>
+                    #{exploreController.init()}
+                </script>
+                <h:form id="formExplore">                    
+                    <p:dataTable id="posts" var="publicacion" value="#{exploreController.publicaciones}"  selectionMode="single" rowKey="#{publicacion.idPublicacion}">
+                        <p:column style="background-color: #2e3136;text-align: center">
+                            <div style="display: flex;">
+                                <div style="flex: 1;"></div>
+                                <div id="post" style="flex: 1;background-color: #1e2124;border-radius:10px;text-align:left;box-shadow: 0px 0px 10px 1px black;">
+
+                                    <p:outputLabel value="#{exploreController.getAuthor(publicacion)}" style="color:white; font-weight: bold;margin: 10px 10px 10px 15px"/>
+
+                                    <p:commandButton class='follow' icon="pi pi-user-plus" action="#{exploreController.follow(publicacion)}" style="margin: 10px 10px 10px 10px;width: 25px; height:25px;font-size: 10px;font-weight: bold"></p:commandButton>
+                                    <p:remoteCommand name="#{publicacion.idPublicacion}" action="#{exploreController.registerUpvote(publicacion)}"/>
+
+                                    <img src="#{publicacion.imagen}" style="width:606px;height:auto"></img> 
+
+                                    <p:commandButton class='upvote' icon="pi pi-thumbs-up" action="#{exploreController.registerUpvote(publicacion)}" style="margin:5px 10px 5px 10px;color:white;background-color: transparent;border-color: transparent"></p:commandButton>
+                                    <p:remoteCommand name="#{publicacion.idPublicacion}" action="#{exploreController.registerUpvote(publicacion)}"/>                                        
+
+                                    <p:outputLabel value="#{publicacion.puntuacion}" style="color:white;margin:5px;font-weight: bold;font-size: 14px"/>
+
+                                    <p:commandButton class='downvote' icon="pi pi-thumbs-down" action="#{exploreController.registerDownvote(publicacion)}" style="margin:5px 10px 5px 10px;color:white;background-color: transparent;border-color: transparent"></p:commandButton>
+                                    <p:remoteCommand name="#{publicacion.idPublicacion}" action="#{exploreController.registerDownvote(publicacion)}"/> 
+
+                                    <p:outputLabel value="#{publicacion.titulo}" style="color:white;margin: 15px"/>
+                                    <br></br>
+                                    <br></br>
+                                    <p:commandButton id="comments" actionListener="#{commentsController.setSelectedPost(publicacion)}" update=":formExplore:commentDialog" oncomplete="PF('wcomment').show()" icon="pi pi-comments" styleClass="rounded-button ui-button-secondary" style="margin: 5px 286px 15px 287px"></p:commandButton>   
+                                </div>
+                                <div style="flex: 1;"></div>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dialog widgetVar="wcomment" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="600" width="400px">
+                        <div style="display: flex;">
+                            <p:outputPanel id="commentDialog" style="text-align: center">
+                                <p:column rendered="#{not empty commentsController.selectedPost}">
+                                    <script>
+                                        #{commentsController.init(commentsController.selectedPost)}
+                                    </script>
+                                    <div align="center" id="bottom-comment" style="position: fixed; top: 700px; left: 42%">
+                                        <p:inputText value="#{commentsController.newComment}" placeholder="Escriba un comentario"></p:inputText>
+                                        <p:commandButton action="#{commentsController.postCommentExplore()}" icon="pi pi-send" style="margin: 10px 10px 10px 10px;width: 36px; height:36px;font-size: 10px;font-weight: bold"/>
+                                    </div>
+                                    <div id="top-comment" style="position: relative; top: 0px; left: 0px">
+                                        <p:dataTable var="comment" value="#{commentsController.comentarios}" emptyMessage="Oops... Nadie ha comentado esta publicacion" selectionMode="single" rowKey="#{comment.idComentario}">
+                                            <p:column style="text-align: left">
+                                                <p:outputLabel value="#{commentsController.getAuthor(comment.idUsuario)}" style="color:black;font-size: 18px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
+                                                <p:outputLabel value="#{comment.texto}" style="color:black;font-size: 14px;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </p:column>
+                            </p:outputPanel>
+                        </div>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
