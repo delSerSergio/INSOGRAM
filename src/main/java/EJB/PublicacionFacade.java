@@ -22,7 +22,7 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
     private static final String SQL_UPDATE_SCORE = "FROM Publicacion p WHERE p.idPublicacion = ?1";
     private static final String SQL_FOLLOWED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1";
     private static final String SQL_UPLOADED = "FROM Publicacion p WHERE p.idUsuario = ?1";
-
+    
     @PersistenceContext(unitName = "bbddPU")
     private EntityManager em;
 
@@ -34,8 +34,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
     public PublicacionFacade() {
         super(Publicacion.class);
     }
-
-    @Override
+    
+     @Override
     public List<Publicacion> findAll() {
         try {
             Query query = em.createQuery(SQL_RECENT);
@@ -102,5 +102,4 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
         }
         return null;
        }
-
 }

@@ -1,3 +1,4 @@
+
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -26,22 +27,7 @@
                                 <p:commandLink actionListener="#{profileController.setSelectedPost(publicacion)}" update=":formProfile:postDetail" oncomplete="PF('wpost').show()">
                                     <h:graphicImage library="images" name="#{publicacion.imagen}"  style="width:auto;height:300px;"/> 
                                 </p:commandLink>
-                            </div>
-                            
-                            <p:dialog id="editPost" widgetVar="weditPost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" style="background-image:none;background:#241f1f">
-                                <span class="ui-float-label">                                        
-                                    <h:outputText value="Descripcion"/>
-                                    <br></br>
-                                    <p:inputTextarea id="description" value="#{profileController.titulo}" placeholder="Descripcion" style="width:300px;margin: 5px"/>
-                                    <br></br>
-                                    <p:fileUpload id="image" value="#{profileController.image}" mode="simple" style="width:300px;margin: 50px" skinSimple="true"/>
-                                    <br></br>
-                                    <p:selectBooleanCheckbox value="#{profileController.comentarios}" itemLabel="Bloquear comentarios"/>
-                                    <br></br> 
-                                    <br></br> 
-                                    <p:commandButton value="Editar" id="button-upload" action="#{profileController.modifyImage()}" style="width:300px;margin: 5px;border-color: white;background-color: #01548f"></p:commandButton>
-                                </span>
-                            </p:dialog>
+                            </div>                     
                         </p:dataGrid>
 
                         <p:dialog widgetVar="wpost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="600">
@@ -51,8 +37,7 @@
                                         <p:outputLabel value="#{profileController.getAuthor(profileController.selectedPost)}" style="color:black;font-size: 20px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
                                         
                                         <p:commandButton id="button-publicacion" icon="pi pi-ellipsis-v" type="button" style="width: 25px; height: 25px; margin: 10px 10px 10px 10px; font-size: 10px; color: black;font-weight: bold; background-color: transparent ;border-color: transparent"/>                              
-                                        <i class="pi pi-publicacion"  icon="pi pi-image" style="height:25px;width:25px;margin:10px 10px 10px 10px;float:right;background-color: transparent;font-size: 40px;color: white; font-size: 2rem"></i>
-
+                                        
                                         <p:menu overlay="true" trigger="button-publicacion" my="left top" at="left bottom">                            
                                             <p:menuitem value="Modificar publicacion" onclick="PF('weditPost').show()" icon="pi pi-pencil"/>
                                             <p:menuitem value="Eliminar publicacion" action="#{profileController.deleteImage()}" icon="pi pi-trash"/>                            
@@ -102,6 +87,20 @@
                             </div>
                         </p:dialog>
                        
+                        <p:dialog id="editPost" widgetVar="weditPost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" style="background-image:none;background:#241f1f">
+                                <span class="ui-float-label">                                        
+                                    <h:outputText value="Descripcion"/>
+                                    <br></br>
+                                    <p:inputTextarea id="description" value="#{profileController.titulo}" placeholder="Descripcion" style="width:300px;margin: 5px"/>
+                                    <br></br>
+                                    <p:fileUpload id="image" value="#{profileController.image}" mode="simple" style="width:300px;margin: 50px" skinSimple="true"/>
+                                    <br></br>
+                                    <p:selectBooleanCheckbox value="#{profileController.comentarios}" itemLabel="Bloquear comentarios"/>
+                                    <br></br> 
+                                    <br></br> 
+                                    <p:commandButton value="Editar" id="button-upload" action="#{profileController.modifyImage()}" style="width:300px;margin: 5px;border-color: white;background-color: #01548f"></p:commandButton>
+                                </span>
+                            </p:dialog>
                     </h:form>
                 </div>
 

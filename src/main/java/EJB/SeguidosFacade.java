@@ -18,7 +18,7 @@ import modelo.Seguidos;
 @Stateless
 public class SeguidosFacade extends AbstractFacade<Seguidos> implements SeguidosFacadeLocal {
 
-    private static final String SQL_FIND = "FROM Seguidos s WHERE s.idUsuario = ?1 and s.idSeguidos = ?2";
+    private static final String SQL_FIND = "FROM Seguidos s WHERE s.idUsuario = ?1 and s.idSeguidos = ?2 and s.bloqueado = 0";
     
     @PersistenceContext(unitName = "bbddPU")
     private EntityManager em;
