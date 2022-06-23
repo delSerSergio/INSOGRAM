@@ -46,6 +46,7 @@ public class headerController implements Serializable {
     private PublicacionFacadeLocal EJBPublicacion;
     private UploadedFile image;
     private String titulo;
+    private boolean comentarios;
 
     /* -------------------------- Medodo inicializacion -------------------------*/
     public void init() {
@@ -79,7 +80,14 @@ public class headerController implements Serializable {
             Publicacion publi = new Publicacion();
 
             publi.setTitulo(this.titulo);
+            
+            if(this.comentarios == false){
+                publi.setPermisocomentarios("false");
+            }else{
+                publi.setPermisocomentarios("true");
+            }
 
+            
             //System.out.println(this.image.getContentType());
             InputStream ins = this.image.getInputStream();
 
@@ -167,5 +175,14 @@ public class headerController implements Serializable {
     public void setEJBPublicacion(PublicacionFacadeLocal EJBPublicacion) {
         this.EJBPublicacion = EJBPublicacion;
     }
-   
+
+    public boolean getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(boolean comentarios) {
+        this.comentarios = comentarios;
+    }
+     
+    
 }

@@ -50,6 +50,7 @@ public class dashboardController implements Serializable {
     private String titulo;
     private String image;
     private int selectedPost;
+    
 
     /* -------------------------- Metodos carga imagenes -------------------------*/
     public void init() {
@@ -214,7 +215,7 @@ public class dashboardController implements Serializable {
         return "/dashboard?faces-redirect=true";
     }
 
-    /* -------------------------- Getters y Setters -------------------------*/
+    /* -------------------------- Getters y Setters -------------------------*/    
     public PublicacionFacadeLocal getEJBPublicacion() {
         return EJBPublicacion;
     }
