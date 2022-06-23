@@ -9,16 +9,10 @@ import EJB.ScoresFacadeLocal;
 import EJB.SeguidosFacadeLocal;
 import EJB.UsuariosFacadeLocal;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -28,8 +22,6 @@ import javax.inject.Named;
 import modelo.Publicacion;
 import modelo.Usuarios;
 import org.primefaces.model.file.UploadedFile;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -50,6 +42,7 @@ public class profileController implements Serializable {
     private String titulo;
     private UploadedFile image;
     private boolean comentarios;
+    private UploadedFile profilePic;
 
     /* -------------------------- Atributos Manejo publicaciones -------------------------*/
     @EJB
@@ -66,6 +59,39 @@ public class profileController implements Serializable {
         Usuarios user = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
 
         String result = "";
+
+        if (this.profilePic != null) {
+            System.out.println("ha entrado");
+            try {
+                InputStream ins = this.profilePic.getInputStream();
+                BufferedImage imBuff = ImageIO.read(ins);
+
+                String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+                path = path.substring(6, path.lastIndexOf("W")) + "resources/images/";
+                path = path.replace("/", "\\");
+
+                System.out.println(path);
+
+                String name = "";
+                if (this.EJBPublicacion.findAll() == null) {
+                    name = "p" + 1 + ".png";
+                } else {
+                    user = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+                    name = "p" + user.getNick() + ".png";
+                }
+
+                File bos = new File(path + name);
+
+                ImageIO.write(imBuff, "png", bos);
+
+                //Pasito final
+                user.setFoto(name);
+
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+            result = "/profile?faces-redirect=true";
+        }
 
         if (!this.bio.equals(user.getBio()) && !this.bio.equals("")) {
             user.setBio(this.bio);
@@ -87,6 +113,7 @@ public class profileController implements Serializable {
             user.setPassword(this.password);
             result = logout();
         }
+
         //Query
         EJBUsuario.edit(user);
 
@@ -108,58 +135,56 @@ public class profileController implements Serializable {
     }
 
     /* -------------------------- Metodos modificacion y borrado de imagenes -------------------------*/
-
-    public String deleteImage(){
+    public String deleteImage() {
         Publicacion publi = selectedPost;
-        
+
         EJBPublicacion.remove(publi);
-        
+
         return "/profile?faces-redirect=true";
     }
 
-    public String modifyImage(){
+    public String modifyImage() {
         Publicacion publi = selectedPost;
-        
-        if(publi.getTitulo() != this.titulo){
-            publi.setTitulo(this.titulo);
-        }
-           
-        if(!this.image.equals(null)){
-            try {
-            InputStream ins = this.image.getInputStream();
-            BufferedImage imBuff = ImageIO.read(ins);
 
-            String imageString;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            
-            ImageIO.write(imBuff, "jpg", bos);
-            byte[] imageBytes = bos.toByteArray();
-
-            BASE64Encoder encoder = new BASE64Encoder();
-            imageString = encoder.encode(imageBytes);
-        
-        
-            if(!publi.getImagen().equals(imageString)){
-                publi.setImagen(imageString);
+        if (publi.getTitulo() != null) {
+            if (publi.getTitulo() != this.titulo) {
+                publi.setTitulo(this.titulo);
             }
-            
-            }catch(IOException e){
+        }
+
+        if (this.image != null) {
+            try {
+                InputStream ins = this.image.getInputStream();
+                BufferedImage imBuff = ImageIO.read(ins);
+
+                String imageString;
+                String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+                path = path.substring(6, path.lastIndexOf("W")) + "resources/images/";
+                path = path.replace("/", "\\");
+
+                System.out.println(path);
+                
+
+                File bos = new File(path + publi.getImagen());
+
+                ImageIO.write(imBuff, "png", bos);
+
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
-        
-        
-        /*
-        if(publi.getPermisocomentarios() != this.comentarios){
-            publi.setPermisocomentarios()
+
+        if (this.comentarios == true) {
+            publi.setPermisocomentarios("true");
+        } else {
+            publi.setPermisocomentarios("false");
         }
-        */
-        
+
         EJBPublicacion.edit(publi);
-        
+
         return "/profile?faces-redirect=true";
     }
-      
+
     /* -------------------------- Metodo para obtener el autor de una publicacion -------------------------*/
     public String getAuthor(Publicacion pub) {
         System.out.println(pub.getTitulo());
@@ -248,7 +273,7 @@ public class profileController implements Serializable {
     public void setPublicaciones(List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
     }
-   
+
     public Publicacion getSelectedPost() {
         return selectedPost;
     }
@@ -284,6 +309,13 @@ public class profileController implements Serializable {
     public void setComentarios(boolean comentarios) {
         this.comentarios = comentarios;
     }
-    
-    
+
+    public UploadedFile getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(UploadedFile profilePic) {
+        this.profilePic = profilePic;
+    }
+
 }

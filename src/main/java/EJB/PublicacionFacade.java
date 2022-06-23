@@ -20,8 +20,8 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
 
     private static final String SQL_RECENT = "FROM Publicacion p ORDER BY p.fecha DESC";
     private static final String SQL_UPDATE_SCORE = "FROM Publicacion p WHERE p.idPublicacion = ?1";
-    private static final String SQL_FOLLOWED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1";
-    private static final String SQL_UPLOADED = "FROM Publicacion p WHERE p.idUsuario = ?1";
+    private static final String SQL_FOLLOWED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1 and s.bloqueado = 0 ORDER BY p.fecha DESC";
+    private static final String SQL_UPLOADED = "FROM Publicacion p WHERE p.idUsuario = ?1 ORDER BY p.fecha DESC";
 
     @PersistenceContext(unitName = "bbddPU")
     private EntityManager em;

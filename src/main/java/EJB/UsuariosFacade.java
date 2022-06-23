@@ -1,18 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package EJB;
 
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import modelo.Usuarios;
 
 /**
  *
- * @author sdels
+ * @author jsali
  */
 @Stateless
 public class UsuariosFacade extends AbstractFacade<Usuarios> implements UsuariosFacadeLocal {
@@ -39,7 +40,7 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> implements Usuarios
 
         try {
             Query query = em.createQuery(SQL_LOGIN);
-            
+
             query.setParameter(1, user.getNick());
             query.setParameter(2, user.getPassword());
 
@@ -70,11 +71,11 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> implements Usuarios
             System.err.println(e);
         }
     }
-    
+
     @Override
     public Usuarios getAuthor(int id) {
         Usuarios usuario = null;
-       
+
         try {
             Query query = em.createQuery(SQL_POST_AUTHOR);
             query.setParameter(1, id);
@@ -83,11 +84,12 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> implements Usuarios
             if (!lista.isEmpty()) {
                 usuario = lista.get(0);
             }
-            
+
         } catch (Exception e) {
             System.err.println(e);
         }
 
         return usuario;
     }
+
 }

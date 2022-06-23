@@ -104,9 +104,12 @@ public class headerController implements Serializable {
 
             String name = "";
             if (this.EJBPublicacion.findAll() == null) {
-                name = 1 + ".png";
+                name = 0 + ".png";
             } else {
-                name = (this.EJBPublicacion.findAll().size() + 1) + ".png";
+                String prevName = this.EJBPublicacion.findAll().get(0).getImagen();
+                prevName = prevName.substring(0, prevName.lastIndexOf("."));
+                int lastName = Integer.valueOf(prevName) + 1;
+                name = lastName + ".png";
             }
 
             File bos = new File(path + name);
@@ -206,4 +209,7 @@ public class headerController implements Serializable {
         this.comentarios = comentarios;
     }
 
+    public String getProfilePic() {
+        return user.getFoto();
+    }
 }

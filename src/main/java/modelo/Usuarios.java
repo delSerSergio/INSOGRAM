@@ -49,6 +49,9 @@ public class Usuarios implements Serializable{
     
     @Column(name="enlace")
     private String enlace;
+    
+    @Column(name="foto")
+    private String foto;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -130,19 +133,28 @@ public class Usuarios implements Serializable{
         this.enlace = enlace;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 83 * hash + this.idUsuario;
-        hash = 83 * hash + Objects.hashCode(this.nick);
-        hash = 83 * hash + Objects.hashCode(this.password);
-        hash = 83 * hash + Objects.hashCode(this.email);
-        hash = 83 * hash + Objects.hashCode(this.nombre);
-        hash = 83 * hash + Objects.hashCode(this.apellido);
-        hash = 83 * hash + this.permisos;
-        hash = 83 * hash + Objects.hashCode(this.fechanacimiento);
-        hash = 83 * hash + Objects.hashCode(this.bio);
-        hash = 83 * hash + Objects.hashCode(this.enlace);
+        int hash = 5;
+        hash = 89 * hash + this.idUsuario;
+        hash = 89 * hash + Objects.hashCode(this.nick);
+        hash = 89 * hash + Objects.hashCode(this.password);
+        hash = 89 * hash + Objects.hashCode(this.email);
+        hash = 89 * hash + Objects.hashCode(this.nombre);
+        hash = 89 * hash + Objects.hashCode(this.apellido);
+        hash = 89 * hash + this.permisos;
+        hash = 89 * hash + Objects.hashCode(this.fechanacimiento);
+        hash = 89 * hash + Objects.hashCode(this.bio);
+        hash = 89 * hash + Objects.hashCode(this.enlace);
+        hash = 89 * hash + Objects.hashCode(this.foto);
         return hash;
     }
 
@@ -185,13 +197,11 @@ public class Usuarios implements Serializable{
         if (!Objects.equals(this.enlace, other.enlace)) {
             return false;
         }
-        if (!Objects.equals(this.fechanacimiento, other.fechanacimiento)) {
+        if (!Objects.equals(this.foto, other.foto)) {
             return false;
         }
-        return true;
+        return Objects.equals(this.fechanacimiento, other.fechanacimiento);
     }
-
-    
     
     
 }

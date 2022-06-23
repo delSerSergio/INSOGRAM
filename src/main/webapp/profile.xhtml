@@ -18,7 +18,7 @@
                     <script>
                         #{profileController.init()}
                     </script>
-                    <h:form id="formProfile"> 
+                    <h:form id="formProfile" enctype="multipart/form-data"> 
 
                         <p:dataGrid id="posts" var="publicacion" layout="grid" value="#{profileController.publicaciones}" styleClass="ui-custompanelgrid">   
                             <div align="center" style="height: 300px;background-color: black">
@@ -27,7 +27,7 @@
                                     <h:graphicImage library="images" name="#{publicacion.imagen}"  style="width:auto;height:300px;"/> 
                                 </p:commandLink>
                             </div>
-                            
+
                             <p:dialog id="editPost" widgetVar="weditPost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" style="background-image:none;background:#241f1f">
                                 <span class="ui-float-label">                                        
                                     <h:outputText value="Descripcion"/>
@@ -44,12 +44,12 @@
                             </p:dialog>
                         </p:dataGrid>
 
-                        <p:dialog widgetVar="wpost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="600">
+                        <p:dialog widgetVar="wpost" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="600" width="650">
                             <div style="display: flex;">
                                 <p:outputPanel id="postDetail" style="text-align: left">
                                     <p:column rendered="#{not empty profileController.selectedPost}">
                                         <p:outputLabel value="#{profileController.getAuthor(profileController.selectedPost)}" style="color:black;font-size: 20px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
-                                        
+
                                         <p:commandButton id="button-publicacion" icon="pi pi-ellipsis-v" type="button" style="width: 25px; height: 25px; margin: 10px 10px 10px 10px; font-size: 10px; color: black;font-weight: bold; background-color: transparent ;border-color: transparent"/>                              
                                         <i class="pi pi-publicacion"  icon="pi pi-image" style="height:25px;width:25px;margin:10px 10px 10px 10px;float:right;background-color: transparent;font-size: 40px;color: white; font-size: 2rem"></i>
 
@@ -57,11 +57,11 @@
                                             <p:menuitem value="Modificar publicacion" onclick="PF('weditPost').show()" icon="pi pi-pencil"/>
                                             <p:menuitem value="Eliminar publicacion" action="#{profileController.deleteImage()}" icon="pi pi-trash"/>                            
                                         </p:menu>
-                                        
+
                                         <br></br>
                                         <h:graphicImage library="images" name="#{profileController.selectedPost.imagen}"  style="width:606px;height:auto"/> 
                                         <br></br>
-                                                                             
+
                                         <p:commandButton class='upvote' icon="pi pi-thumbs-up" style="margin:5px 10px 5px 10px;color:black;background-color: transparent;border-color: transparent"></p:commandButton>
 
                                         <p:outputLabel value="#{profileController.selectedPost.puntuacion}" style="color:black;margin:5px;font-weight: bold;font-size: 14px"/>
@@ -71,37 +71,22 @@
                                         <p:outputLabel value="#{profileController.selectedPost.titulo}" style="color:black;margin: 15px"/>
                                         <br></br>
                                         <br></br>
-                                        <p:commandButton id="comments" actionListener="#{commentsController.setSelectedPost(publicacion)}" update=":formProfile:commentDialog" oncomplete="PF('wcomment').show()" icon="pi pi-comments" styleClass="rounded-button ui-button-secondary" style="margin: 5px 286px 15px 287px"></p:commandButton>   
-                                        
+                                        <script>
+                                            #{commentsController.init(profileController.selectedPost)}
+                                        </script>
+                                        <p:dataTable var="comment" value="#{commentsController.comentarios}" emptyMessage="Oops... Nadie ha comentado esta publicacion" selectionMode="single" rowKey="#{comment.idComentario}">
+                                            <p:column style="text-align: left">
+                                                <p:outputLabel value="#{commentsController.getAuthor(comment.idUsuario)}" style="color:black;font-size: 18px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
+                                                <p:outputLabel value="#{comment.texto}" style="color:black;font-size: 14px;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>                                
+                                            </p:column>
+                                        </p:dataTable>
                                     </p:column>
                                 </p:outputPanel>
                             </div>
                         </p:dialog>
 
-                        <p:dialog widgetVar="wcomment" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="600" width="400px">
-                            <div style="display: flex;">
-                                <p:outputPanel id="commentDialog" style="text-align: center">
-                                    <p:column rendered="#{not empty commentsController.selectedPost}">
-                                        <script>
-                                            #{commentsController.init(commentsController.selectedPost)}
-                                        </script>
-                                        <div align="center" id="bottom-comment" style="position: fixed; top: 700px; left: 42%">
-                                            <p:inputText value="#{commentsController.newComment}" placeholder="Escriba un comentario"></p:inputText>
-                                            <p:commandButton action="#{commentsController.postCommentProfile()}" icon="pi pi-send" style="margin: 10px 10px 10px 10px;width: 36px; height:36px;font-size: 10px;font-weight: bold"/>
-                                        </div>
-                                        <div id="top-comment" style="position: relative; top: 0px; left: 0px">
-                                            <p:dataTable var="comment" value="#{commentsController.comentarios}" emptyMessage="Oops... Nadie ha comentado esta publicacion" selectionMode="single" rowKey="#{comment.idComentario}">
-                                                <p:column style="text-align: left">
-                                                    <p:outputLabel value="#{commentsController.getAuthor(comment.idUsuario)}" style="color:black;font-size: 18px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
-                                                    <p:outputLabel value="#{comment.texto}" style="color:black;font-size: 14px;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>                                
-                                                </p:column>
-                                            </p:dataTable>
-                                        </div>
-                                    </p:column>
-                                </p:outputPanel>
-                            </div>
-                        </p:dialog>
-                       
+
+
                     </h:form>
                 </div>
 
@@ -109,7 +94,7 @@
                     <div id="left" align="center" style="height: 300px;flex: 1">
                         <!-- Foto de perfil, nickname y boton de editar datos -->
 
-                        <h:graphicImage library="images" name="profile-placeholder.png"  style="margin: 50px 50px 25px 50px;height: 125px"/> 
+                        <h:graphicImage library="images" name="#{headerController.getProfilePic()}"  style="object-fit: cover;margin: 50px 50px 25px 50px;height: 130px; width: 130px;border-radius: 100px"/> 
 
                         <br></br>
                         <h:outputText value="#{headerController.username}" style="margin: 25px 50px 50px 50px;font-size: 20px; color: white; font-weight: bold"/>
@@ -117,7 +102,7 @@
                         <i class="pi pi-user-edit" id="button-edit-profile" icon="pi pi-user-edit" onclick="editProfile()" style="height:40px;width:40px;margin:15px;font-size: 40px;color: white; font-size: 2rem; border-radius: 5px"></i>
 
                         <!-- Script para manejo de dialog -->
-                        <h:form>
+                        <h:form enctype="multipart/form-data">
                             <p:dialog id="edit-profile" widgetVar="wedit" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" style="background-image:none;background:#241f1f">
                                 <span class="ui-float-label">
                                     <h:outputText value="Nombre de usuario"/>
@@ -127,7 +112,7 @@
                                     <h:outputText value="Contraseña"/>
                                     <br></br>
                                     <p:inputText id="password" value="#{profileController.password}" placeholder="Nueva Contraseña" style="width:300px;margin: 5px"/>
-                                    <br></br>                                    
+                                    <br></br>  
                                     <h:outputText value="Email"/>
                                     <br></br>
                                     <p:inputText id="Email" value="#{profileController.email}" placeholder="Email" style="width:300px;margin: 5px"/>
@@ -139,6 +124,11 @@
                                     <h:outputText value="Biografia"/>
                                     <br></br>
                                     <p:inputTextarea id="Biografia" value="#{profileController.bio}" placeholder="Descripcion" style="width:300px;margin: 5px"/>
+                                    <br></br>
+                                    <br></br>
+                                    <h:outputText value="Foto de perfil"/>
+                                    <br></br>
+                                    <p:fileUpload id="image" value="#{profileController.profilePic}" mode="simple" style="width:90px;margin: 25px" skinSimple="true"/>
                                     <br></br>
 
                                     <p:commandButton value="guardar" id="button-upload" action="#{profileController.save()}" style="width:300px;margin: 5px;border-color: white;background-color: #01548f"></p:commandButton>
