@@ -1,4 +1,3 @@
-
 <?xml version='1.0' encoding='UTF-8' ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -50,9 +49,7 @@
                                         <p:inputTextarea id="description" value="#{headerController.titulo}" placeholder="Descripcion" style="width:300px;margin: 5px "/>
                                         <br></br>
                                         <p:fileUpload id="image" value="#{headerController.image}" mode="simple" style="width:300px;margin: 50px" skinSimple="true"/>
-                                        <br></br>  
-                                        <p:selectBooleanCheckbox value="#{headerController.comentarios}" itemLabel="Bloquear comentarios"/>
-                                        <br></br>                                      
+                                        <br></br>                                        
                                         <p:commandButton value="Publicar" id="button-upload" action="#{headerController.upload()}" style="width:300px;margin: 5px;border-color: white;background-color: #01548f"></p:commandButton>
                                     </span>
                                 </p:dialog>

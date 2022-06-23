@@ -39,9 +39,6 @@ public class Publicacion implements Serializable {
     @Column(name="fecha")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fecha;
-    
-    @Column(name="permisocomentarios")
-    private String permisocomentarios;
 
     public int getIdPublicacion() {
         return idPublicacion;
@@ -91,24 +88,15 @@ public class Publicacion implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getPermisocomentarios() {
-        return permisocomentarios;
-    }
-
-    public void setPermisocomentarios(String permisocomentarios) {
-        this.permisocomentarios = permisocomentarios;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 73 * hash + this.idPublicacion;
-        hash = 73 * hash + Objects.hashCode(this.titulo);
-        hash = 73 * hash + Objects.hashCode(this.imagen);
-        hash = 73 * hash + this.puntuacion;
-        hash = 73 * hash + this.idUsuario;
-        hash = 73 * hash + Objects.hashCode(this.fecha);
-        hash = 73 * hash + Objects.hashCode(this.permisocomentarios);
+        hash = 37 * hash + this.idPublicacion;
+        hash = 37 * hash + Objects.hashCode(this.titulo);
+        hash = 37 * hash + Objects.hashCode(this.imagen);
+        hash = 37 * hash + this.puntuacion;
+        hash = 37 * hash + this.idUsuario;
+        hash = 37 * hash + Objects.hashCode(this.fecha);
         return hash;
     }
 
@@ -139,11 +127,8 @@ public class Publicacion implements Serializable {
         if (!Objects.equals(this.imagen, other.imagen)) {
             return false;
         }
-        if (!Objects.equals(this.permisocomentarios, other.permisocomentarios)) {
-            return false;
-        }
         return Objects.equals(this.fecha, other.fecha);
     }
-
+    
     
 }
