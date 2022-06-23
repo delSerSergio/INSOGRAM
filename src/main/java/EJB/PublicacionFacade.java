@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import modelo.Publicacion;
+import modelo.Usuarios;
 
 /**
  *
@@ -20,7 +21,9 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
 
     private static final String SQL_RECENT = "FROM Publicacion p ORDER BY p.fecha DESC";
     private static final String SQL_UPDATE_SCORE = "FROM Publicacion p WHERE p.idPublicacion = ?1";
-    private static final String SQL_FOLLOWED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1 and s.bloqueado = 0 ORDER BY p.fecha DESC";
+    private static final String SQL_FOLLOWED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1 AND s.bloqueado = 0 ORDER BY p.fecha DESC";
+    private static final String SQL_BLOCKED = "FROM Publicacion p INNER JOIN Seguidos s ON p.idUsuario = s.idSeguidos WHERE s.idUsuario = ?1 AND s.bloqueado = 1 ORDER BY p.fecha DESC";
+    
     private static final String SQL_UPLOADED = "FROM Publicacion p WHERE p.idUsuario = ?1 ORDER BY p.fecha DESC";
 
     @PersistenceContext(unitName = "bbddPU")
@@ -36,12 +39,24 @@ public class PublicacionFacade extends AbstractFacade<Publicacion> implements Pu
     }
 
     @Override
-    public List<Publicacion> findAll() {
+    public List<Publicacion> findAll(Usuarios user) {
         try {
-            Query query = em.createQuery(SQL_RECENT);
+            Query query = em.createQuery(SQL_RECENT);            
+            Query query2 = em.createQuery(SQL_BLOCKED);
+            
+            query2.setParameter(1, user.getIdUsuario());
 
             List<Publicacion> lista = query.getResultList();
-            if (!lista.isEmpty()) {
+            List<Publicacion> lista2 = query2.getResultList();
+            
+            if (!lista.isEmpty() && !lista2.isEmpty()) {
+                
+                for(Publicacion aux : lista2){
+                    lista.remove(aux);
+                }
+                
+                return lista;
+            }else if(!lista.isEmpty() && lista2.isEmpty()){
                 return lista;
             }
         } catch (Exception e) {

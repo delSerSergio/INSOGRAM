@@ -7,6 +7,7 @@ package EJB;
 import java.util.List;
 import javax.ejb.Local;
 import modelo.Publicacion;
+import modelo.Usuarios;
 
 /**
  *
@@ -24,6 +25,8 @@ public interface PublicacionFacadeLocal {
     Publicacion find(Object id);
 
     List<Publicacion> findAll();
+    
+    List<Publicacion> findAll(Usuarios user);
 
     List<Publicacion> findRange(int[] range);
 

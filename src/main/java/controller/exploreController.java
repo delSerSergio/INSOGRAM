@@ -54,7 +54,8 @@ public class exploreController implements Serializable{
     /* -------------------------- Metodos carga imagenes -------------------------*/
     public void init() {
         //Importacion de imagenes
-        this.publicaciones = EJBPublicacion.findAll();
+        Usuarios res = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+        this.publicaciones = EJBPublicacion.findAll(res);
 
         List<BufferedImage> images = new ArrayList<>();
     }
