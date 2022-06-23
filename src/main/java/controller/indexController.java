@@ -60,48 +60,9 @@ public class indexController implements Serializable{
     /* -------------------------- Metodos carga imagenes -------------------------*/
     public void load() {
         //Importacion de imagenes
-        try {
-            this.publicaciones = EJBPublicacion.findAll();
+        this.publicaciones = EJBPublicacion.findAll();
 
-            List<BufferedImage> images = new ArrayList<>();
-
-            int i = 0;
-
-            for (Publicacion aux : this.publicaciones) {
-                BufferedImage value = decodeToImage(aux.getImagen());
-
-                images.add(value);
-
-                ImageIO.write(images.get(i), "png", new File("tmpImage.png"));
-                byte[] imageBytes = Files.readAllBytes(Paths.get("tmpImage.png"));
-
-                Base64.Encoder encoder = Base64.getEncoder();
-
-                aux.setImagen("data:image/png;base64," + encoder.encodeToString(imageBytes));
-
-                i++;
-            }
-
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-
-    }
-
-    public BufferedImage decodeToImage(String imageString) {
-        BufferedImage result = null;
-
-        try {
-            byte[] imageByte;
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            result = ImageIO.read(bis);
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-
-        return result;
+        List<BufferedImage> images = new ArrayList<>();
     }
 
     /* -------------------------- Metodo para obtener el autor de una publicacion -------------------------*/

@@ -8,6 +8,7 @@ import EJB.PublicacionFacadeLocal;
 import EJB.UsuariosFacadeLocal;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -86,16 +87,28 @@ public class headerController implements Serializable {
             BufferedImage imBuff = ImageIO.read(ins);
 
             String imageString;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation());
+            
+            String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+            path = path.substring(6, path.lastIndexOf("W")) + "resources/images/";
+            path = path.replace("/", "\\");
+            
+            System.out.println(path);
+            
+            String name = "";
+            if(this.EJBPublicacion.findAll() == null){
+                name = 1 + ".png";
+            }else{
+                name = (this.EJBPublicacion.findAll().size() + 1) + ".png";
+            }
+
+            File bos = new File(path + name);
+            
 
             try {
-                ImageIO.write(imBuff, "jpg", bos);
-                byte[] imageBytes = bos.toByteArray();
+                ImageIO.write(imBuff, "png", bos);
 
-                BASE64Encoder encoder = new BASE64Encoder();
-                imageString = encoder.encode(imageBytes);
-
-                publi.setImagen(imageString);
+                publi.setImagen(name);
                 publi.setIdUsuario(this.user.getIdUsuario());
                 
                 Date date = new Date();

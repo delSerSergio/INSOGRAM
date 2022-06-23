@@ -25,7 +25,7 @@
                                     <p:commandButton class='follow' icon="pi pi-user-plus" action="#{exploreController.follow(publicacion)}" style="margin: 10px 10px 10px 10px;width: 25px; height:25px;font-size: 10px;font-weight: bold"></p:commandButton>
                                     <p:remoteCommand name="#{publicacion.idPublicacion}" action="#{exploreController.registerUpvote(publicacion)}"/>
 
-                                    <img src="#{publicacion.imagen}" style="width:606px;height:auto"></img> 
+                                    <h:graphicImage library="images" name="#{publicacion.imagen}" style="width:606px;height:auto"/>
 
                                     <p:commandButton class='upvote' icon="pi pi-thumbs-up" action="#{exploreController.registerUpvote(publicacion)}" style="margin:5px 10px 5px 10px;color:white;background-color: transparent;border-color: transparent"></p:commandButton>
                                     <p:remoteCommand name="#{publicacion.idPublicacion}" action="#{exploreController.registerUpvote(publicacion)}"/>                                        
