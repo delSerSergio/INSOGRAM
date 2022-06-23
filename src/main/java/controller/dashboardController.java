@@ -54,52 +54,10 @@ public class dashboardController implements Serializable {
     /* -------------------------- Metodos carga imagenes -------------------------*/
     public void init() {
         //Importacion de imagenes
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            Usuarios loggedUser = (Usuarios) context.getExternalContext().getSessionMap().get("user");
-            
-            this.publicaciones = EJBPublicacion.findAllFollowed(loggedUser.getIdUsuario());
+        FacesContext context = FacesContext.getCurrentInstance();
+        Usuarios loggedUser = (Usuarios) context.getExternalContext().getSessionMap().get("user");
 
-            List<BufferedImage> images = new ArrayList<>();
-
-            int i = 0;
-            if(this.publicaciones != null){
-                for (Publicacion aux : this.publicaciones) {
-                    BufferedImage value = decodeToImage(aux.getImagen());
-
-                    images.add(value);
-
-                    ImageIO.write(images.get(i), "png", new File("tmpImage.png"));
-                    byte[] imageBytes = Files.readAllBytes(Paths.get("tmpImage.png"));
-
-                    Base64.Encoder encoder = Base64.getEncoder();
-
-                    aux.setImagen("data:image/png;base64," + encoder.encodeToString(imageBytes));
-
-                    i++;
-                }
-            }
-
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-
-    }
-
-    public BufferedImage decodeToImage(String imageString) {
-        BufferedImage result = null;
-
-        try {
-            byte[] imageByte;
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            result = ImageIO.read(bis);
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-
-        return result;
+        this.publicaciones = EJBPublicacion.findAllFollowed(loggedUser.getIdUsuario());
     }
 
     /* -------------------------- Metodo para obtener el autor de una publicacion -------------------------*/

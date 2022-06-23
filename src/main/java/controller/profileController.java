@@ -10,8 +10,10 @@ import EJB.SeguidosFacadeLocal;
 import EJB.UsuariosFacadeLocal;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,7 +27,9 @@ import javax.imageio.ImageIO;
 import javax.inject.Named;
 import modelo.Publicacion;
 import modelo.Usuarios;
+import org.primefaces.model.file.UploadedFile;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -43,6 +47,9 @@ public class profileController implements Serializable {
     private String link;
     private String password;
     private String email;
+    private String titulo;
+    private UploadedFile image;
+    private boolean comentarios;
 
     /* -------------------------- Atributos Manejo publicaciones -------------------------*/
     @EJB
@@ -94,54 +101,65 @@ public class profileController implements Serializable {
     /* -------------------------- Metodos carga imagenes -------------------------*/
     public void init() {
         //Importacion de imagenes
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            Usuarios loggedUser = (Usuarios) context.getExternalContext().getSessionMap().get("user");
+        FacesContext context = FacesContext.getCurrentInstance();
+        Usuarios loggedUser = (Usuarios) context.getExternalContext().getSessionMap().get("user");
 
-            this.publicaciones = EJBPublicacion.findAllUploaded(loggedUser.getIdUsuario());
+        this.publicaciones = EJBPublicacion.findAllUploaded(loggedUser.getIdUsuario());
+    }
 
-            List<BufferedImage> images = new ArrayList<>();
+    /* -------------------------- Metodos modificacion y borrado de imagenes -------------------------*/
 
-            int i = 0;
-            if (this.publicaciones != null) {
-                for (Publicacion aux : this.publicaciones) {
-                    BufferedImage value = decodeToImage(aux.getImagen());
+    public String deleteImage(){
+        Publicacion publi = selectedPost;
+        
+        EJBPublicacion.remove(publi);
+        
+        return "/profile?faces-redirect=true";
+    }
 
-                    images.add(value);
+    public String modifyImage(){
+        Publicacion publi = selectedPost;
+        
+        if(publi.getTitulo() != this.titulo){
+            publi.setTitulo(this.titulo);
+        }
+           
+        if(!this.image.equals(null)){
+            try {
+            InputStream ins = this.image.getInputStream();
+            BufferedImage imBuff = ImageIO.read(ins);
 
-                    ImageIO.write(images.get(i), "png", new File("tmpImage.png"));
-                    byte[] imageBytes = Files.readAllBytes(Paths.get("tmpImage.png"));
+            String imageString;
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            
+            ImageIO.write(imBuff, "jpg", bos);
+            byte[] imageBytes = bos.toByteArray();
 
-                    Base64.Encoder encoder = Base64.getEncoder();
-
-                    aux.setImagen("data:image/png;base64," + encoder.encodeToString(imageBytes));
-
-                    i++;
-                }
+            BASE64Encoder encoder = new BASE64Encoder();
+            imageString = encoder.encode(imageBytes);
+        
+        
+            if(!publi.getImagen().equals(imageString)){
+                publi.setImagen(imageString);
             }
-
-        } catch (IOException e) {
-            System.err.println(e);
+            
+            }catch(IOException e){
+                System.err.println(e.getMessage());
+            }
         }
-
-    }
-
-    public BufferedImage decodeToImage(String imageString) {
-        BufferedImage result = null;
-
-        try {
-            byte[] imageByte;
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            result = ImageIO.read(bis);
-        } catch (IOException e) {
-            System.err.println(e);
+        
+        
+        /*
+        if(publi.getPermisocomentarios() != this.comentarios){
+            publi.setPermisocomentarios()
         }
-
-        return result;
+        */
+        
+        EJBPublicacion.edit(publi);
+        
+        return "/profile?faces-redirect=true";
     }
-
+      
     /* -------------------------- Metodo para obtener el autor de una publicacion -------------------------*/
     public String getAuthor(Publicacion pub) {
         System.out.println(pub.getTitulo());
@@ -242,4 +260,30 @@ public class profileController implements Serializable {
     public String getSelectedImage() {
         return this.selectedPost.getImagen();
     }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public UploadedFile getImage() {
+        return image;
+    }
+
+    public void setImage(UploadedFile image) {
+        this.image = image;
+    }
+
+    public boolean getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(boolean comentarios) {
+        this.comentarios = comentarios;
+    }
+    
+    
 }
