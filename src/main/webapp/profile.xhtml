@@ -36,9 +36,19 @@
                                         <p:outputLabel value="#{profileController.getAuthor(profileController.selectedPost)}" style="color:black;font-size: 20px;font-weight: bold;margin: 10px 10px 10px 15px; border-color: transparent; background-color: transparent;"/>
 
                                         <p:commandButton class='follow' icon="pi pi-user-minus" style="margin: 10px 10px 10px 10px;width: 25px; height:25px;font-size: 10px;font-weight: bold;background-color: transparent; color: transparent; border-color: transparent"></p:commandButton>
+                                        
+                                        <p:commandButton id="button-publicacion" icon="pi pi-image" type="button" style="width: 25px; height: 25px; margin: 10px 150px 10px 10px; font-size: 10px; font-weight: bold; background-color: 000000;border-color: transparent"/>                              
+                                        <i class="pi pi-publicacion"  icon="pi pi-image" style="height:25px;width:25px;margin:10px 10px 10px 10px;float:right;background-color: transparent;font-size: 40px;color: white; font-size: 2rem"></i>
+
+                                        <p:menu overlay="true" trigger="button-publicacion" my="left top" at="left bottom">                            
+                                            <p:menuitem value="Modificar imagen" ajax="false" action="#{profileController.modifyImage()}" icon="pi pi-ellipsis-v"/>
+                                            <p:menuitem value="Eliminar imagen" ajax="false" action="#{profileController.deleteImage()}" icon="pi pi-trash"/>                            
+                                        </p:menu>
+                                        
                                         <br></br>
                                         <img src="#{profileController.selectedPost.imagen}" style="width:606px;height:auto"></img> 
                                         <br></br>
+                                                                             
                                         <p:commandButton class='upvote' icon="pi pi-thumbs-up" style="margin:5px 10px 5px 10px;color:black;background-color: transparent;border-color: transparent"></p:commandButton>
 
                                         <p:outputLabel value="#{profileController.selectedPost.puntuacion}" style="color:black;margin:5px;font-weight: bold;font-size: 14px"/>
