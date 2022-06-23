@@ -30,9 +30,12 @@ public class Seguidos implements Serializable {
     @Column(name = "idSeguidos")
     private int idSeguidos;
 
+    @Column(name = "bloqueado")
+    private int bloqueado;
+    
     public int getIdSeguimiento() {
         return idSeguimiento;
-    }
+    }    
 
     public void setIdSeguimiento(int idSeguimiento) {
         this.idSeguimiento = idSeguimiento;
@@ -54,12 +57,21 @@ public class Seguidos implements Serializable {
         this.idSeguidos = idSeguidos;
     }
 
+    public int getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(int bloqueado) {
+        this.bloqueado = bloqueado;
+    }    
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + this.idSeguimiento;
-        hash = 67 * hash + this.idUsuario;
-        hash = 67 * hash + this.idSeguidos;
+        int hash = 7;
+        hash = 29 * hash + this.idSeguimiento;
+        hash = 29 * hash + this.idUsuario;
+        hash = 29 * hash + this.idSeguidos;
+        hash = 29 * hash + this.bloqueado;
         return hash;
     }
 
@@ -81,6 +93,9 @@ public class Seguidos implements Serializable {
         if (this.idUsuario != other.idUsuario) {
             return false;
         }
-        return this.idSeguidos == other.idSeguidos;
+        if (this.idSeguidos != other.idSeguidos) {
+            return false;
+        }
+        return this.bloqueado == other.bloqueado;
     }
 }

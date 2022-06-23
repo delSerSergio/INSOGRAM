@@ -47,6 +47,7 @@ public class headerController implements Serializable {
     private PublicacionFacadeLocal EJBPublicacion;
     private UploadedFile image;
     private String titulo;
+    private boolean comentarios;
 
     /* -------------------------- Medodo inicializacion -------------------------*/
     public void init() {
@@ -81,6 +82,12 @@ public class headerController implements Serializable {
 
             publi.setTitulo(this.titulo);
 
+            if (this.comentarios == false) {
+                publi.setPermisocomentarios("false");
+            } else {
+                publi.setPermisocomentarios("true");
+            }
+
             //System.out.println(this.image.getContentType());
             InputStream ins = this.image.getInputStream();
 
@@ -88,40 +95,39 @@ public class headerController implements Serializable {
 
             String imageString;
             System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation());
-            
+
             String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
             path = path.substring(6, path.lastIndexOf("W")) + "resources/images/";
             path = path.replace("/", "\\");
-            
+
             System.out.println(path);
-            
+
             String name = "";
-            if(this.EJBPublicacion.findAll() == null){
+            if (this.EJBPublicacion.findAll() == null) {
                 name = 1 + ".png";
-            }else{
+            } else {
                 name = (this.EJBPublicacion.findAll().size() + 1) + ".png";
             }
 
             File bos = new File(path + name);
-            
 
             try {
                 ImageIO.write(imBuff, "png", bos);
 
                 publi.setImagen(name);
                 publi.setIdUsuario(this.user.getIdUsuario());
-                
+
                 Date date = new Date();
-                
+
                 System.out.println(date);
 
                 publi.setFecha(date);
 
                 EJBPublicacion.create(publi);
-                
+
                 //Recargar 
-               return "/dashboard?faces-redirect=true";
-                
+                return "/dashboard?faces-redirect=true";
+
             } catch (IOException e) {
                 System.err.println(e);
             }
@@ -131,29 +137,36 @@ public class headerController implements Serializable {
         }
         return null;
     }
-    
+
     /* -------------------------- Getters y Setters -------------------------*/
     public String getDesc() {
         return user.getBio();
     }
+
     public void setDesc(String desc) {
         this.user.setBio(desc);
     }
+
     public UploadedFile getImage() {
         return image;
     }
+
     public void setImage(UploadedFile image) {
         this.image = image;
     }
+
     public Usuarios getUser() {
         return this.user;
     }
+
     public String getUsername() {
         return this.user.getNick();
     }
+
     public String getName() {
         return this.user.getNombre() + " " + this.user.getApellido();
     }
+
     public String getLink() {
         String aux = "";
         String link = this.user.getEnlace();
@@ -168,17 +181,29 @@ public class headerController implements Serializable {
         link = aux + link;
         return link;
     }
+
     public String getTitulo() {
         return titulo;
     }
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
     public PublicacionFacadeLocal getEJBPublicacion() {
         return EJBPublicacion;
     }
+
     public void setEJBPublicacion(PublicacionFacadeLocal EJBPublicacion) {
         this.EJBPublicacion = EJBPublicacion;
     }
-   
+
+    public boolean getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(boolean comentarios) {
+        this.comentarios = comentarios;
+    }
+
 }

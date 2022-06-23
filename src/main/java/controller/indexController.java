@@ -61,8 +61,6 @@ public class indexController implements Serializable{
     public void load() {
         //Importacion de imagenes
         this.publicaciones = EJBPublicacion.findAll();
-
-        List<BufferedImage> images = new ArrayList<>();
     }
 
     /* -------------------------- Metodo para obtener el autor de una publicacion -------------------------*/

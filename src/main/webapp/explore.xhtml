@@ -38,7 +38,7 @@
                                     <p:outputLabel value="#{publicacion.titulo}" style="color:white;margin: 15px"/>
                                     <br></br>
                                     <br></br>
-                                    <p:commandButton id="comments" actionListener="#{commentsController.setSelectedPost(publicacion)}" update=":formExplore:commentDialog" oncomplete="PF('wcomment').show()" icon="pi pi-comments" styleClass="rounded-button ui-button-secondary" style="margin: 5px 286px 15px 287px"></p:commandButton>   
+                                    <p:commandButton id="comments" disabled="#{publicacion.permisocomentarios}"  actionListener="#{commentsController.setSelectedPost(publicacion)}" update=":formExplore:commentDialog" oncomplete="PF('wcomment').show()" icon="pi pi-comments" styleClass="rounded-button ui-button-secondary" style="margin: 5px 286px 15px 287px"></p:commandButton>   
                                 </div>
                                 <div style="flex: 1;"></div>
                             </div>
