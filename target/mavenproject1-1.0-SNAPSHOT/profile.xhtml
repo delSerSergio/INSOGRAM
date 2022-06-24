@@ -153,7 +153,60 @@
                         <br></br>
                         <br></br>
                         <br></br>
-                        <br></br>                       
+
+                        <p:commandLink actionListener="#{profileController.getSeguidores()}" update=":seguidoresDetail:seguidoresDetail" oncomplete="PF('wseguidores').show()">
+                            <h:outputLabel value="Seguidores #{profileController.getnSeguidores()}" style="margin: 25px 50px 25px 50px;font-size: 20px; color: white; font-weight: bold"></h:outputLabel>
+                        </p:commandLink>
+
+                        <p:commandLink actionListener="#{profileController.getSeguidos()}" update=":seguidoresDetail:seguidosDetail" oncomplete="PF('wseguidos').show()">
+                            <h:outputLabel value="Seguidos #{profileController.getnSeguidos()}" style="margin: 25px 50px 25px 50px;font-size: 20px; color: white; font-weight: bold"></h:outputLabel>
+                        </p:commandLink>
+
+                        <h:form id="seguidoresDetail">
+                            <p:dialog id="seguidores" widgetVar="wseguidores" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" width="400" style="background-image:none;background:#241f1f">
+                                <span class="ui-float-label">
+                                    <p:outputPanel id="seguidoresDetail" style="text-align: left">
+                                        <p:dataTable var="user" value="#{profileController.seguidores}" emptyMessage="Oops... Nadie te sigue" selectionMode="single" rowKey="#{user.idSeguimiento}">
+                                            <p:column style="text-align: left">
+                                                <div style="display: flex;">
+                                                    <div align="left" style="flex: 1" width="200" height="74">
+                                                        <h:outputLabel value="#{profileController.getAuthor(user.idUsuario)}" style="margin: 10px 50px 10px 10px;font-size: 20px; color: black; font-weight: bold"></h:outputLabel> 
+                                                        <h:outputLabel value="#{profileController.checkBlock(user)}" style="margin: 10px 50px 10px 10px;font-size: 16px; color: black"></h:outputLabel> 
+                                                    </div>
+                                                    <div align="right" style="flex: 1" width="200" height="74">
+                                                        <p:commandButton class='follow' icon="pi pi-ban" action="#{profileController.block(user.idSeguimiento)}" style="margin: 10px 10px 10px 10px;width: 25px; height:25px;font-size: 10px;font-weight: bold;background-color: transparent; color: black; border-color: black"></p:commandButton>
+                                                    </div>
+                                                </div>
+
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:outputPanel>
+                                </span>
+                            </p:dialog>
+
+                            <p:dialog id="seguidos" widgetVar="wseguidos" closeOnEscape="true" showEffect="drop" hideEffect="drop" draggable="false" closable="true" modal="false" resizable="false" height="400" width="400" style="background-image:none;background:#241f1f">
+                                <span class="ui-float-label">
+                                    <p:outputPanel id="seguidosDetail" style="text-align: left">
+                                        <p:dataTable var="user" value="#{profileController.seguidos}" emptyMessage="Oops... No sigues a nadie" selectionMode="single" rowKey="#{user.idSeguimiento}">
+                                            <p:column style="text-align: left">
+                                                <div style="display: flex;">
+                                                    <div align="left" style="flex: 1" width="200" height="74">
+                                                        <h:outputLabel value="#{profileController.getAuthor(user.idSeguidos)}"  style="margin: 10px 50px 10px 10px;font-size: 20px; color: black; font-weight: bold"></h:outputLabel>                        
+                                                    </div>
+                                                    <div align="right" style="flex: 1" width="200" height="74">
+                                                        <p:commandButton class='follow' icon="pi pi-user-minus" action="#{profileController.unfollow(user.idSeguimiento)}" style="margin: 10px 10px 10px 10px;width: 25px; height:25px;font-size: 10px;font-weight: bold;background-color: transparent; color: black; border-color: black"></p:commandButton>
+                                                    </div>
+                                                </div>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:outputPanel>
+                                </span>
+                            </p:dialog>
+                        </h:form>
+
+                        <br></br>
+                        <br></br>    
+
                         <h:outputText value="#{headerController.getName()}" style="margin: 50px 50px 50px 50px;font-size: 20px; color: white; font-weight: bold"/>                     
                         <br></br>                            
                         <br></br>

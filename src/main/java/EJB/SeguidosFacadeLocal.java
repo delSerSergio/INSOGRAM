@@ -7,6 +7,7 @@ package EJB;
 import java.util.List;
 import javax.ejb.Local;
 import modelo.Seguidos;
+import modelo.Usuarios;
 
 /**
  *
@@ -23,10 +24,16 @@ public interface SeguidosFacadeLocal {
 
     Seguidos find(Object id);
 
+    Seguidos find(int id);
+
     List<Seguidos> findAll();
 
     List<Seguidos> findRange(int[] range);
 
     int count();
-    
+
+    public List<Seguidos> findSeguidores(Usuarios us);
+
+    public List<Seguidos> findSeguidos(Usuarios us);
+
 }

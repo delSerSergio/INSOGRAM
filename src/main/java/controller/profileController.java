@@ -20,6 +20,7 @@ import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Named;
 import modelo.Publicacion;
+import modelo.Seguidos;
 import modelo.Usuarios;
 import org.primefaces.model.file.UploadedFile;
 
@@ -44,6 +45,12 @@ public class profileController implements Serializable {
     private boolean comentarios;
     private UploadedFile profilePic;
 
+    private List<Seguidos> seguidores;
+    private List<Seguidos> seguidos;
+    
+    private int nSeguidores = 0;
+    private int nSeguidos = 0;
+    
     /* -------------------------- Atributos Manejo publicaciones -------------------------*/
     @EJB
     private ScoresFacadeLocal EJBScores;
@@ -130,6 +137,13 @@ public class profileController implements Serializable {
         //Importacion de imagenes
         FacesContext context = FacesContext.getCurrentInstance();
         Usuarios loggedUser = (Usuarios) context.getExternalContext().getSessionMap().get("user");
+        
+        this.seguidores = EJBSeguidos.findSeguidores(loggedUser);
+        this.seguidos = EJBSeguidos.findSeguidos(loggedUser);
+        
+        if(this.seguidores != null) this.nSeguidores = this.seguidores.size();
+        
+        if(this.seguidos != null) this.nSeguidos = this.seguidos.size();
 
         this.publicaciones = EJBPublicacion.findAllUploaded(loggedUser.getIdUsuario());
     }
@@ -163,7 +177,6 @@ public class profileController implements Serializable {
                 path = path.replace("/", "\\");
 
                 System.out.println(path);
-                
 
                 File bos = new File(path + publi.getImagen());
 
@@ -191,6 +204,43 @@ public class profileController implements Serializable {
         Usuarios res = EJBUsuario.getAuthor(pub.getIdUsuario());
         System.out.println(res.getNick());
         return res.getNick();
+    }
+    
+    public String checkBlock(Seguidos seg){
+        if(seg.getBloqueado() == 1) return "(bloqueado)";
+        
+        return "";
+    }
+    
+    public String getAuthor(int id) {        
+        Usuarios res = EJBUsuario.getAuthor(id);
+        System.out.println(res.getNick());
+        return res.getNick();
+    }
+    
+    public String unfollow(int id){
+        Seguidos seg = EJBSeguidos.find(id);
+        
+        EJBSeguidos.remove(seg);
+        
+        return "/profile?faces-redirect=true";
+    }
+    
+    public String block(int id){      
+        
+        Seguidos seg = EJBSeguidos.find(id);
+        
+        
+        if(seg.getBloqueado() == 0){
+            seg.setBloqueado(1);
+        }else{
+            seg.setBloqueado(0);
+        }
+        
+        EJBSeguidos.edit(seg);
+        
+        
+        return "/profile?faces-redirect=true";
     }
 
     /* -------------------------- Getters y Setters -------------------------*/
@@ -317,5 +367,39 @@ public class profileController implements Serializable {
     public void setProfilePic(UploadedFile profilePic) {
         this.profilePic = profilePic;
     }
+
+    public List<Seguidos> getSeguidores() {
+        return seguidores;
+    }
+
+    public void setSeguidores(List<Seguidos> Seguidores) {
+        this.seguidores = Seguidores;
+    }
+
+    public List<Seguidos> getSeguidos() {
+        return seguidos;
+    }
+
+    public void setSeguidos(List<Seguidos> Seguidos) {
+        this.seguidos = Seguidos;
+    }
+
+    public int getnSeguidores() {
+        return nSeguidores;
+    }
+
+    public void setnSeguidores(int nSeguidores) {
+        this.nSeguidores = nSeguidores;
+    }
+
+    public int getnSeguidos() {
+        return nSeguidos;
+    }
+
+    public void setnSeguidos(int nSeguidos) {
+        this.nSeguidos = nSeguidos;
+    }
+    
+    
 
 }
