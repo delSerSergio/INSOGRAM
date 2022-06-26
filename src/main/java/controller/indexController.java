@@ -73,7 +73,8 @@ public class indexController implements Serializable{
 
     /* -------------------------- Metodos de gestion de usuarios -------------------------*/    
     public void register(){
-        try{            
+        try{      
+            user.setFoto("profile-placeholder.png");
             EJBUsuario.create(user);
             
             System.out.println("Se crea el usuario");

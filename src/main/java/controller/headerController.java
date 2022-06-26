@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -103,12 +104,13 @@ public class headerController implements Serializable {
             System.out.println(path);
 
             String name = "";
-            if (this.EJBPublicacion.findAll().isEmpty()) {
+            List<Publicacion> results = this.EJBPublicacion.findAll();
+            
+            if (results.isEmpty()) {
                 name = 0 + ".png";
-                System.out.println("IF");
             } else {
-                System.out.println("else");
-                String prevName = this.EJBPublicacion.findAll().get(0).getImagen();
+                String prevName = results.get(results.size() - 1).getImagen();
+                System.out.println(prevName);
                 prevName = prevName.substring(0, prevName.lastIndexOf("."));
                 int lastName = Integer.valueOf(prevName) + 1;
                 name = lastName + ".png";
